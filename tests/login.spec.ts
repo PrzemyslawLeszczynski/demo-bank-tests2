@@ -2,11 +2,11 @@ import { test, expect } from '@playwright/test';
 
 test.describe('User login to Demobank', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/')
-  }); 
+    await page.goto('/');
+  });
   test('successful login with correct credentials', async ({ page }) => {
     //Arrange
-    
+
     const userID = 'testerLO';
     const userPassword = '12345678';
     const expectedUserName = 'Jan Demobankowy';
