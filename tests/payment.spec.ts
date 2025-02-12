@@ -31,11 +31,11 @@ test.describe('Payment tests', () => {
     const expectedMessage = `Przelew wykonany! ${transferAmount},00PLN dla ${transferReceiver}`;
 
     // Act
-    await paymentPage.transferReceiverInput.fill(transferReceiver);
-    await paymentPage.transferToInput.fill(transferAccount);
-    await paymentPage.transferAmountInput.fill(transferAmount);
-    await paymentPage.transferButton.click();
-    await paymentPage.actionCloseButton.click();
+    await paymentPage.makeTransfer(
+      transferReceiver,
+      transferAccount,
+      transferAmount,
+    );
 
     await page.waitForLoadState('domcontentloaded');
 
