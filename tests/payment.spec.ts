@@ -1,10 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { loginData } from '../test-data/login.data';
 import { LoginPage } from '../pages/login.page';
-import { PaymentPage } from '../pages/payment.page';
 import { PulpitPage } from '../pages/pulpit.page';
+import { PaymentPage } from '../pages/payment.page';
+import { log } from 'console';
 
 test.describe('Payment tests', () => {
+  let paymentPage: PaymentPage;
+
   test.beforeEach(async ({ page }) => {
     const userID = loginData.userID;
     const userPassword = loginData.userPassword;
@@ -12,13 +15,12 @@ test.describe('Payment tests', () => {
     await page.goto('/');
     const loginPage = new LoginPage(page);
 
-    await loginPage.loginInput.fill(userID);
-    await loginPage.passwordInput.fill(userPassword);
-    await loginPage.loginButton.click();
+    await loginPage.login(userID, userPassword);
 
     const pulpitPage = new PulpitPage(page);
     await pulpitPage.sideMenuComponent.paymentButton.click();
-    // await page.getByRole('link', { name: 'płatności' }).click();
+
+    paymentPage = new PaymentPage(page);
   });
 
   test('simple payment', async ({ page, request }) => {
@@ -29,7 +31,6 @@ test.describe('Payment tests', () => {
     const expectedMessage = `Przelew wykonany! ${transferAmount},00PLN dla ${transferReceiver}`;
 
     // Act
-    const paymentPage = new PaymentPage(page);
     await paymentPage.transferReceiverInput.fill(transferReceiver);
     await paymentPage.transferToInput.fill(transferAccount);
     await paymentPage.transferAmountInput.fill(transferAmount);
@@ -39,8 +40,6 @@ test.describe('Payment tests', () => {
     await page.waitForLoadState('domcontentloaded');
 
     // Assert
-    await expect(paymentPage.expectedMessage).toHaveText(
-      expectedMessage,
-    );
+    await expect(paymentPage.expectedMessage).toHaveText(expectedMessage);
   });
 });
