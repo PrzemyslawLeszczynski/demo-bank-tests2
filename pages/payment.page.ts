@@ -1,4 +1,5 @@
 import { Locator, Page } from '@playwright/test';
+import { SideMenuComponent } from '../components/side-menu.component';
 
 export class PaymentPage {
   transferReceiverInput: Locator;
@@ -7,6 +8,7 @@ export class PaymentPage {
   transferButton: Locator;
   actionCloseButton: Locator;
   expectedMessage: Locator;
+  sideMenuComponent: SideMenuComponent;
 
   constructor(private page: Page) {
     this.transferReceiverInput = this.page.getByTestId('transfer_receiver');
@@ -17,5 +19,6 @@ export class PaymentPage {
     });
     this.actionCloseButton = this.page.getByTestId('close-button');
     this.expectedMessage = this.page.locator('#show_messages');
+    this.sideMenuComponent = new SideMenuComponent(this.page);
   }
 }

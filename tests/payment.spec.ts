@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { loginData } from '../test-data/login.data';
 import { LoginPage } from '../pages/login.page';
 import { PaymentPage } from '../pages/payment.page';
+import { PulpitPage } from '../pages/pulpit.page';
 
 test.describe('Payment tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -15,7 +16,9 @@ test.describe('Payment tests', () => {
     await loginPage.passwordInput.fill(userPassword);
     await loginPage.loginButton.click();
 
-    await page.getByRole('link', { name: 'płatności' }).click();
+    const pulpitPage = new PulpitPage(page);
+    await pulpitPage.sideMenuComponent.paymentButton.click();
+    // await page.getByRole('link', { name: 'płatności' }).click();
   });
 
   test('simple payment', async ({ page, request }) => {
@@ -32,6 +35,8 @@ test.describe('Payment tests', () => {
     await paymentPage.transferAmountInput.fill(transferAmount);
     await paymentPage.transferButton.click();
     await paymentPage.actionCloseButton.click();
+
+    await page.waitForLoadState('domcontentloaded');
 
     // Assert
     await expect(paymentPage.expectedMessage).toHaveText(
