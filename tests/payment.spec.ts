@@ -23,23 +23,34 @@ test.describe('Payment tests', () => {
     paymentPage = new PaymentPage(page);
   });
 
-  test('simple payment', async ({ page, request }) => {
-    // Arrange
-    const transferReceiver = 'leshchu';
-    const transferAccount = '11 1111 1111 1111 1111 1111 1111';
-    const transferAmount = '666';
-    const expectedMessage = `Przelew wykonany! ${transferAmount},00PLN dla ${transferReceiver}`;
+  test(
+    'simple payment @payment @integration',
+    {
+      tag: ['@payment', '@integration'],
+      annotation: {
+        type: 'documentation',
+        description: 'More to find at http://jaktestowac.pl/lesson/pw1s04l04/',
+      },
+    },
 
-    // Act
-    await paymentPage.makeTransfer(
-      transferReceiver,
-      transferAccount,
-      transferAmount,
-    );
+    async ({ page, request }) => {
+      // Arrange
+      const transferReceiver = 'leshchu';
+      const transferAccount = '11 1111 1111 1111 1111 1111 1111';
+      const transferAmount = '666';
+      const expectedMessage = `Przelew wykonany! ${transferAmount},00PLN dla ${transferReceiver}`;
 
-    await page.waitForLoadState('domcontentloaded');
+      // Act
+      await paymentPage.makeTransfer(
+        transferReceiver,
+        transferAccount,
+        transferAmount,
+      );
 
-    // Assert
-    await expect(paymentPage.expectedMessage).toHaveText(expectedMessage);
-  });
+      await page.waitForLoadState('domcontentloaded');
+
+      // Assert
+      await expect(paymentPage.expectedMessage).toHaveText(expectedMessage);
+    },
+  );
 });
